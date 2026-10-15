@@ -1,0 +1,359 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "namespaces_MyNamespaceosa_name": {
+            "defaultValue": "MyNamespaceosa",
+            "type": "String"
+        },
+        "managedClusters_myAKScluster_name": {
+            "defaultValue": "myAKScluster",
+            "type": "String"
+        },
+        "systemTopics_myakscluster_d474db4b_e84e_4f4e_af49_2259c3c4aacd_name": {
+            "defaultValue": "myakscluster-d474db4b-e84e-4f4e-af49-2259c3c4aacd",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.ContainerService/managedClusters",
+            "apiVersion": "2026-05-02-preview",
+            "name": "[parameters('managedClusters_myAKScluster_name')]",
+            "location": "eastus",
+            "sku": {
+                "name": "Base",
+                "tier": "Free"
+            },
+            "kind": "Base",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "kubernetesVersion": "1.36",
+                "dnsPrefix": "myAKSclust-lab-11428-229748-abac47",
+                "agentPoolProfiles": [
+                    {
+                        "name": "nodepool1",
+                        "count": 1,
+                        "vmSize": "Standard_D2s_v3",
+                        "osDiskSizeGB": 128,
+                        "osDiskType": "Managed",
+                        "kubeletDiskType": "OS",
+                        "maxPods": 30,
+                        "type": "VirtualMachineScaleSets",
+                        "enableAutoScaling": false,
+                        "scaleDownMode": "Delete",
+                        "powerState": {
+                            "code": "Running"
+                        },
+                        "orchestratorVersion": "1.36",
+                        "enableNodePublicIP": false,
+                        "mode": "System",
+                        "enableEncryptionAtHost": false,
+                        "enableUltraSSD": false,
+                        "osType": "Linux",
+                        "osSKU": "Ubuntu",
+                        "nodeImageVersion": "AKSUbuntu-2404gen2containerd-202610.03.0",
+                        "upgradeStrategy": "Rolling",
+                        "upgradeSettings": {
+                            "maxSurge": "10%",
+                            "maxUnavailable": "0"
+                        },
+                        "enableFIPS": false,
+                        "securityProfile": {
+                            "sshAccess": "LocalUser",
+                            "enableVTPM": false,
+                            "enableSecureBoot": false
+                        }
+                    }
+                ],
+                "linuxProfile": {
+                    "adminUsername": "azureuser",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCmfyziTgQVJoU5W35lKR2mb8+55MAwwwEfXdESvbDzZpmdYfGu5yjTw0Qu+8N4zrGl4I4t1dXoycV1NnsZHs3G9eFvhVaNftAhtWXZUZKXFHraoUugNviusFAKALwgcU6g6Js2EtxbTzHFMZX3dchwkda6uQ1euzxyJX9VLUwMXPoqv0bwk8u+QRJkABilo1sN7mtXDPYEIctTqpSSnhLif+FEjwTFSC0YyggS100tIcqt3cBzprVunepD59FENRNYvOzYiTrzvtWtx/lU9A6WpGJrvCcyr5TRagDmVBWo8II/msF4XYhPaAtYxW+jQbgOCcXkUOZoPTzLU5LTkjVN"
+                            }
+                        ]
+                    }
+                },
+                "windowsProfile": {
+                    "adminUsername": "azureuser",
+                    "enableCSIProxy": true
+                },
+                "servicePrincipalProfile": {
+                    "clientId": "msi"
+                },
+                "nodeResourceGroup": "[concat('MC_lab-11428-2297488-86c47ec2_', parameters('managedClusters_myAKScluster_name'), '_eastus')]",
+                "enableRBAC": true,
+                "supportPlan": "KubernetesOfficial",
+                "networkProfile": {
+                    "networkPlugin": "azure",
+                    "networkPolicy": "none",
+                    "networkDataplane": "azure",
+                    "loadBalancerSku": "standard",
+                    "loadBalancerProfile": {
+                        "managedOutboundIPs": {
+                            "count": 1
+                        },
+                        "backendPoolType": "nodeIPConfiguration"
+                    },
+                    "serviceCidr": "10.0.0.0/16",
+                    "dnsServiceIP": "10.0.0.10",
+                    "outboundType": "loadBalancer",
+                    "serviceCidrs": [
+                        "10.0.0.0/16"
+                    ],
+                    "ipFamilies": [
+                        "IPv4"
+                    ],
+                    "podLinkLocalAccess": "IMDS"
+                },
+                "identityProfile": {
+                    "kubeletidentity": {}
+                },
+                "autoUpgradeProfile": {
+                    "nodeOSUpgradeChannel": "NodeImage"
+                },
+                "disableLocalAccounts": false,
+                "securityProfile": {},
+                "storageProfile": {
+                    "diskCSIDriver": {
+                        "enabled": true
+                    },
+                    "fileCSIDriver": {
+                        "enabled": true
+                    },
+                    "snapshotController": {
+                        "enabled": true
+                    }
+                },
+                "oidcIssuerProfile": {
+                    "enabled": true
+                },
+                "nodeDisruptionProfile": {
+                    "nodeDisruptionPolicy": "Allow"
+                },
+                "workloadAutoScalerProfile": {},
+                "metricsProfile": {
+                    "costAnalysis": {
+                        "enabled": false
+                    }
+                },
+                "nodeProvisioningProfile": {
+                    "mode": "Manual"
+                },
+                "bootstrapProfile": {
+                    "artifactSource": "Direct"
+                },
+                "hostedSystemProfile": {
+                    "enabled": false
+                },
+                "enableFIPS": false,
+                "healthMonitorProfile": {
+                    "enableContinuousControlPlaneAndAddonMonitor": false,
+                    "enableOnDemandMonitor": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces",
+            "apiVersion": "2026-07-01-preview",
+            "name": "[parameters('namespaces_MyNamespaceosa_name')]",
+            "location": "eastus",
+            "sku": {
+                "name": "Basic",
+                "tier": "Basic",
+                "capacity": 1
+            },
+            "properties": {
+                "ipAddressType": "IPv4",
+                "platformCapabilities": {
+                    "confidentialCompute": {
+                        "mode": "Disabled"
+                    }
+                },
+                "geoDataReplication": {
+                    "maxReplicationLagDurationInSeconds": 0,
+                    "locations": [
+                        {
+                            "locationName": "eastus",
+                            "roleType": "Primary"
+                        }
+                    ]
+                },
+                "minimumTlsVersion": "1.2",
+                "publicNetworkAccess": "Enabled",
+                "disableLocalAuth": false,
+                "zoneRedundant": true,
+                "isAutoInflateEnabled": false,
+                "maximumThroughputUnits": 0,
+                "kafkaEnabled": true
+            }
+        },
+        {
+            "type": "Microsoft.ContainerService/managedClusters/agentPools",
+            "apiVersion": "2026-05-02-preview",
+            "name": "[concat(parameters('managedClusters_myAKScluster_name'), '/nodepool1')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_myAKScluster_name'))]"
+            ],
+            "properties": {
+                "count": 1,
+                "vmSize": "Standard_D2s_v3",
+                "osDiskSizeGB": 128,
+                "osDiskType": "Managed",
+                "kubeletDiskType": "OS",
+                "maxPods": 30,
+                "type": "VirtualMachineScaleSets",
+                "enableAutoScaling": false,
+                "scaleDownMode": "Delete",
+                "powerState": {
+                    "code": "Running"
+                },
+                "orchestratorVersion": "1.36",
+                "enableNodePublicIP": false,
+                "mode": "System",
+                "enableEncryptionAtHost": false,
+                "enableUltraSSD": false,
+                "osType": "Linux",
+                "osSKU": "Ubuntu",
+                "nodeImageVersion": "AKSUbuntu-2404gen2containerd-202610.03.0",
+                "upgradeStrategy": "Rolling",
+                "upgradeSettings": {
+                    "maxSurge": "10%",
+                    "maxUnavailable": "0"
+                },
+                "enableFIPS": false,
+                "securityProfile": {
+                    "sshAccess": "LocalUser",
+                    "enableVTPM": false,
+                    "enableSecureBoot": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.EventGrid/systemTopics",
+            "apiVersion": "2025-07-15-preview",
+            "name": "[parameters('systemTopics_myakscluster_d474db4b_e84e_4f4e_af49_2259c3c4aacd_name')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_myAKScluster_name'))]"
+            ],
+            "properties": {
+                "source": "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_myAKScluster_name'))]",
+                "topicType": "microsoft.containerservice.managedclusters"
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/authorizationrules",
+            "apiVersion": "2026-07-01-preview",
+            "name": "[concat(parameters('namespaces_MyNamespaceosa_name'), '/RootManageSharedAccessKey')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_MyNamespaceosa_name'))]"
+            ],
+            "properties": {
+                "rights": [
+                    "Listen",
+                    "Manage",
+                    "Send"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/eventhubs",
+            "apiVersion": "2026-07-01-preview",
+            "name": "[concat(parameters('namespaces_MyNamespaceosa_name'), '/eventhub1')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_MyNamespaceosa_name'))]"
+            ],
+            "properties": {
+                "messageTimestampDescription": {
+                    "timestampType": "LogAppend"
+                },
+                "retentionDescription": {
+                    "cleanupPolicy": "Delete",
+                    "retentionTimeInHours": 1
+                },
+                "messageRetentionInDays": 1,
+                "partitionCount": 1,
+                "status": "Active"
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/networkrulesets",
+            "apiVersion": "2026-07-01-preview",
+            "name": "[concat(parameters('namespaces_MyNamespaceosa_name'), '/default')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_MyNamespaceosa_name'))]"
+            ],
+            "properties": {
+                "publicNetworkAccess": "Enabled",
+                "defaultAction": "Allow",
+                "virtualNetworkRules": [],
+                "ipRules": [],
+                "trustedServiceAccessEnabled": false
+            }
+        },
+        {
+            "type": "Microsoft.ContainerService/managedClusters/agentPools/machines",
+            "apiVersion": "2026-05-02-preview",
+            "name": "[concat(parameters('managedClusters_myAKScluster_name'), '/nodepool1/aks-nodepool1-25675839-vmss000000')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.ContainerService/managedClusters/agentPools', parameters('managedClusters_myAKScluster_name'), 'nodepool1')]",
+                "[resourceId('Microsoft.ContainerService/managedClusters', parameters('managedClusters_myAKScluster_name'))]"
+            ],
+            "properties": {
+                "network": {}
+            }
+        },
+        {
+            "type": "Microsoft.EventGrid/systemTopics/eventSubscriptions",
+            "apiVersion": "2025-07-15-preview",
+            "name": "[concat(parameters('systemTopics_myakscluster_d474db4b_e84e_4f4e_af49_2259c3c4aacd_name'), '/MyEventGridSubscription')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventGrid/systemTopics', parameters('systemTopics_myakscluster_d474db4b_e84e_4f4e_af49_2259c3c4aacd_name'))]",
+                "[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('namespaces_MyNamespaceosa_name'), 'eventhub1')]"
+            ],
+            "properties": {
+                "destination": {
+                    "properties": {
+                        "resourceId": "[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('namespaces_MyNamespaceosa_name'), 'eventhub1')]"
+                    },
+                    "endpointType": "EventHub"
+                },
+                "filter": {
+                    "includedEventTypes": [
+                        "Microsoft.ContainerService.NewKubernetesVersionAvailable",
+                        "Microsoft.ContainerService.ClusterSupportEnded",
+                        "Microsoft.ContainerService.ClusterSupportEnding",
+                        "Microsoft.ContainerService.NodePoolRollingStarted",
+                        "Microsoft.ContainerService.NodePoolRollingSucceeded",
+                        "Microsoft.ContainerService.NodePoolRollingFailed"
+                    ]
+                },
+                "eventDeliverySchema": "EventGridSchema",
+                "retryPolicy": {
+                    "maxDeliveryAttempts": 30,
+                    "eventTimeToLiveInMinutes": 1440
+                }
+            }
+        },
+        {
+            "type": "Microsoft.EventHub/namespaces/eventhubs/consumergroups",
+            "apiVersion": "2026-07-01-preview",
+            "name": "[concat(parameters('namespaces_MyNamespaceosa_name'), '/eventhub1/$Default')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces/eventhubs', parameters('namespaces_MyNamespaceosa_name'), 'eventhub1')]",
+                "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaces_MyNamespaceosa_name'))]"
+            ],
+            "properties": {}
+        }
+    ]
+}
